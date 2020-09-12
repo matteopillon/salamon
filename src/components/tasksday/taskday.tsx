@@ -1,10 +1,8 @@
-import React, { FunctionComponent, useState } from 'react';
-import { Stack, Label, DefaultEffects, Text, Separator, ITextStyles, Callout, getTheme, mergeStyleSets, FontWeights, Link, DefaultButton, TagItem, IStackTokens } from '@fluentui/react'
-import { useBoolean, useId } from '@uifabric/react-hooks';
+import React, { FunctionComponent } from 'react';
+import { Stack, Label, Text, Separator, IStackTokens } from '@fluentui/react'
 
 import './taskday.css'
 import { Day, Task } from '../navigation/navigation';
-import App from '../app/app';
 import TaskItem from '../task-item/task-item';
 
 type TaskDayProp = {

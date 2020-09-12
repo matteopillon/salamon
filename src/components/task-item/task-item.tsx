@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState } from 'react';
-import { Stack, Image, DefaultEffects, Text, Separator, ITextStyles, Callout, getTheme, mergeStyleSets, FontWeights, Link, DefaultButton, Panel, ImageFit, IImageProps, initializeIcons, TextField } from '@fluentui/react'
-import { useBoolean, useId } from '@uifabric/react-hooks';
+import React, { FunctionComponent } from 'react';
+import { Stack, Image, DefaultEffects, Text, Panel, ImageFit, IImageProps, initializeIcons, TextField } from '@fluentui/react'
+import { useBoolean } from '@uifabric/react-hooks';
 
 import './task-item.css'
 import { Task } from '../navigation/navigation';;
@@ -17,7 +17,6 @@ function getTypefromNumber(type: number) {
             return 'App.to di Acquisto';
         default:
             return 'Incontro con Fornitore';
-            break;
     }
 }
 
@@ -29,7 +28,6 @@ function getClassfromNumber(type: number) {
             return 'taskCardHeaderGreen';
         default:
             return 'taskCardHeaderBlue';
-            break;
     }
 }
 

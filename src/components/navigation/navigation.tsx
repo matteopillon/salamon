@@ -1,8 +1,7 @@
 import React from 'react';
 import './navigation.css'
-import { Pivot, ICommandBarItemProps, PivotItem, Label, IStyleSet, ILabelStyles, CommandBar } from '@fluentui/react'
-import TaskDay from '../tasksday/taskday';
-import { type } from 'os';
+import { Pivot, PivotItem, Label, IStyleSet, ILabelStyles, CommandBar } from '@fluentui/react'
+import TaskDay from '../tasksday/taskday'
 
 
 export class Task {
@@ -65,19 +64,9 @@ const days: Day[] = [{
     key: 5,
 }];
 
-class MenuItem {
-    title = '';
-}
-
 const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
     root: { marginTop: 10 },
 };
-
-const menuItems: ICommandBarItemProps[] = [
-    { name: 'Agenda', key: 'tasks' },
-    { name: 'Da Fare', key: 'todo' },
-    { name: 'Chiamate', key: 'chiamate' },
-]
 
 function Navigation() {
     return (
