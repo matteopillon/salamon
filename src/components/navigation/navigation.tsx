@@ -1,6 +1,6 @@
 import React from 'react';
 import './navigation.css'
-import { Pivot, PivotItem, Label, IStyleSet, ILabelStyles, CommandBar, PivotLinkFormat, PivotLinkSize } from '@fluentui/react'
+import { Pivot, PivotItem, Label, CommandBar, PivotLinkFormat, PivotLinkSize } from '@fluentui/react'
 import TaskDay from '../tasksday/taskday'
 import TaskDay3gg from '../tasksday3gg/taskday3gg'
 import { ToDoList } from '../todos/todo-list';
@@ -65,9 +65,9 @@ const days: Day[] = [{
     key: 5,
 }];
 
-const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
-    root: { marginTop: 10 },
-};
+// const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
+//     root: { marginTop: 10 },
+// };
 
 function Navigation() {
     return (

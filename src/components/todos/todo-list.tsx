@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import './todo-list.css'
-import { IStyleSet, ILabelStyles, IColumn, Fabric, DetailsList, TextField, Selection, SelectionMode, DetailsListLayoutMode, mergeStyleSets, Modal, getTheme, FontWeights, IconButton, IDragOptions, ContextualMenu, IIconProps, IDatePickerStrings, DatePicker, DayOfWeek, Dropdown, IDropdownStyles, DefaultButton, PrimaryButton } from '@fluentui/react'
+import {  IColumn, Fabric, DetailsList, TextField, Selection, SelectionMode, DetailsListLayoutMode, mergeStyleSets, Modal, getTheme, FontWeights, IconButton, IIconProps, IDatePickerStrings, DatePicker, DayOfWeek, Dropdown, IDropdownStyles, DefaultButton, PrimaryButton, IButtonProps, ICommandBarItemProps, CommandBar } from '@fluentui/react'
 const theme = getTheme();
 
 const cancelIcon: IIconProps = { iconName: 'Cancel' };
@@ -8,6 +8,7 @@ const cancelIcon: IIconProps = { iconName: 'Cancel' };
 const DropdownControlledMultiExampleOptions = [
   { key: 'mattea', text: 'Mattea' },
   { key: 'gabriele', text: 'Gabriele' },
+  { key: 'antonio', text: 'Antonio' },
 ];
 
 const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 300 } };
@@ -48,7 +49,7 @@ const classNames = mergeStyleSets({
     marginBottom: '20px',
   },
   container: {
-    padding: '30px'
+   
   },
   header: [
 
@@ -107,6 +108,76 @@ const DayPickerStrings: IDatePickerStrings = {
   yearPickerHeaderAriaLabel: '{0}, Seleziona per cambiare il mese',
 };
 
+const _commandItems: ICommandBarItemProps[] = [
+  {
+    key: 'newItem',
+    text: 'Nuovo',
+    cacheKey: 'myCacheKey', // changing this key will invalidate this item's cache
+    iconProps: { iconName: 'Add' },
+    subMenuProps: {
+      items: [
+        {
+          key: 'emailMessage',
+          text: 'Nuovo Appuntamento di vendita',
+          iconProps: { iconName: 'Mail' },
+          // ['data-automation-id']: 'newEmailButton', // optional
+        },
+        {
+          key: 'calendarEvent',
+          text: 'Nuovo Appuntamento di acquisto',
+          iconProps: { iconName: 'Calendar' },
+        },
+      ],
+    },
+  },
+  {
+    key: 'upload',
+    text: 'Upload',
+    iconProps: { iconName: 'Upload' },
+    href: 'https://developer.microsoft.com/en-us/fluentui',
+  },
+  {
+    key: 'share',
+    text: 'Share',
+    iconProps: { iconName: 'Share' },
+    onClick: () => console.log('Share'),
+  },
+  {
+    key: 'download',
+    text: 'Download',
+    iconProps: { iconName: 'Download' },
+    onClick: () => console.log('Download'),
+  },
+];
+
+const _overflowItems: ICommandBarItemProps[] = [
+  { key: 'move', text: 'Move to...', onClick: () => console.log('Move to'), iconProps: { iconName: 'MoveToFolder' } },
+  { key: 'copy', text: 'Copy to...', onClick: () => console.log('Copy to'), iconProps: { iconName: 'Copy' } },
+  { key: 'rename', text: 'Rename...', onClick: () => console.log('Rename'), iconProps: { iconName: 'Edit' } },
+];
+
+const _farItems: ICommandBarItemProps[] = [
+  {
+    key: 'tile',
+    text: 'Grid view',
+    // This needs an ariaLabel since it's icon-only
+    ariaLabel: 'Grid view',
+    iconOnly: true,
+    iconProps: { iconName: 'Tiles' },
+    onClick: () => console.log('Tiles'),
+  },
+  {
+    key: 'info',
+    text: 'Info',
+    // This needs an ariaLabel since it's icon-only
+    ariaLabel: 'Info',
+    iconOnly: true,
+    iconProps: { iconName: 'Info' },
+    onClick: () => console.log('Info'),
+  },
+];
+
+
 const controlClass = mergeStyleSets({
   control: {
     margin: '0 0 15px 0',
@@ -114,6 +185,7 @@ const controlClass = mergeStyleSets({
   },
 });
 
+const overflowProps: IButtonProps = { ariaLabel: 'Altri comandi' };
 
 // const dragOptions: IDragOptions = {
 //   moveMenuItemText: 'Move',
@@ -171,6 +243,11 @@ const controlStyles = {
   },
 };
 
+const badgeStyles : CSSProperties = {
+  width: 16,
+  height: 16,
+};
+
 export class ToDo {
   description: string = '';
   agent: string = '';
@@ -179,6 +256,7 @@ export class ToDo {
   type: number = 0;
   key: string = '';
 }
+
 
 function addToDo(count: number): ToDo[] {
   const todos: ToDo[] = [];
@@ -196,6 +274,17 @@ function addToDo(count: number): ToDo[] {
   return todos;
 }
 
+function getClassfromNumber(type: number) {
+  switch (type) {
+      case 2:
+          return 'taskCardHeaderYellow';
+      case 3:
+          return 'taskCardHeaderGreen';
+      default:
+          return 'taskCardHeaderBlue';
+  }
+}
+
 function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -211,9 +300,7 @@ export interface IToDosListState {
   columns: IColumn[];
   items: ToDo[];
   selectionDetails: string;
-  isModalSelection: boolean;
   isCompactMode: boolean;
-  announcedMessage?: string;
   openedToDo?: ToDo;
   selectedKeys: string[]
 }
@@ -233,7 +320,25 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
     this._allItems = _generateDocuments();
 
     const columns: IColumn[] = [
-
+      {
+        key: 'column0',
+        name: ' ',
+        fieldName: 'type',
+        minWidth: 20,
+        maxWidth: 20,
+        isRowHeader: false,
+        isResizable: false,
+        isSorted: true,
+        isSortedDescending: false,
+        sortAscendingAriaLabel: 'Sorted A to Z',
+        sortDescendingAriaLabel: 'Sorted Z to A',
+        onColumnClick: this._onColumnClick,
+        data: 'string',
+        onRender: (item: ToDo) => {
+          return <div style={badgeStyles} className={getClassfromNumber(item.type)}><span></span> </div>;
+        },
+        isPadded: true,
+      },
       {
         key: 'column2',
         name: 'Descrizione',
@@ -248,19 +353,22 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
         sortDescendingAriaLabel: 'Sorted Z to A',
         onColumnClick: this._onColumnClick,
         data: 'string',
+        onRender: (item: ToDo) => {
+          return <div >{item.description.toString()}</div>;
+        },
         isPadded: true,
       },
       {
         key: 'column3',
         name: 'Date Modified',
         fieldName: 'dateModifiedValue',
-        minWidth: 70,
-        maxWidth: 90,
+        minWidth: 120,
+        maxWidth: 150,
         isResizable: true,
         onColumnClick: this._onColumnClick,
-        data: 'number',
+        data: 'date',
         onRender: (item: ToDo) => {
-          return <span>{item.date.toString()}</span>;
+          return <span >{item.date.toLocaleString()}</span>;
         },
         isPadded: true,
       },
@@ -293,9 +401,7 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
       items: this._allItems,
       columns: columns,
       selectionDetails: this._getSelectionDetails(),
-      isModalSelection: false,
       isCompactMode: false,
-      announcedMessage: undefined,
       openedToDo: undefined,
       selectedKeys: []
     };
@@ -303,19 +409,31 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
   private onChangeDescriptioFieldValue
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) {
     if (this.state.openedToDo) {
-      this.state.openedToDo.description = (newValue || '')
+    //  this.state.openedToDo.description = (newValue || '')
     }
   }
 
   public render() {
-    const { columns, isCompactMode, items, selectionDetails, isModalSelection, announcedMessage } = this.state;
+    const { columns, isCompactMode, items } = this.state;
 
     return (
       <Fabric className={classNames.container}>
+        <div>
+
+        </div>
         <div className={classNames.controlWrapper}>
 
           <TextField label="Filtra:" onChange={this._onChangeText} styles={controlStyles} />
 
+        </div>
+        <div className={classNames.container}>
+          <CommandBar
+            items={_commandItems}
+            overflowItems={_overflowItems}
+            overflowButtonProps={overflowProps}
+            farItems={_farItems}
+            ariaLabel=""
+          />
         </div>
         {/* <div className={classNames.selectionDetails}>{selectionDetails}</div> */}
         <div >
@@ -333,7 +451,7 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
         </div>
         <Modal
           titleAriaId={this.state.openedToDo?.key}
-          isOpen={this.state.openedToDo != undefined}
+          isOpen={this.state.openedToDo !== undefined}
           onDismiss={this.hideModal.bind(this)}
           isBlocking={false}
           containerClassName={contentStyles.container}
@@ -381,22 +499,22 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
   }
 
   public componentDidUpdate(previousProps: any, previousState: IToDosListState) {
-    if (previousState.isModalSelection !== this.state.isModalSelection && !this.state.isModalSelection) {
-      this._selection.setAllSelected(false);
-    }
+    // if (previousState.isModalSelection !== this.state.isModalSelection && !this.state.isModalSelection) {
+    //   this._selection.setAllSelected(false);
+    // }
   }
 
   private _getKey(item: any, index?: number): string {
     return item.key;
   }
 
-  private _onChangeCompactMode = (ev: React.MouseEvent<HTMLElement>, checked: boolean): void => {
-    this.setState({ isCompactMode: checked });
-  };
+  // private _onChangeCompactMode = (ev: React.MouseEvent<HTMLElement>, checked: boolean): void => {
+  //   this.setState({ isCompactMode: checked });
+  // };
 
-  private _onChangeModalSelection = (ev: React.MouseEvent<HTMLElement>, checked: boolean): void => {
-    this.setState({ isModalSelection: checked });
-  };
+  // private _onChangeModalSelection = (ev: React.MouseEvent<HTMLElement>, checked: boolean): void => {
+  //   this.setState({ isModalSelection: checked });
+  // };
 
   private _onChangeText = (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, text?: string): void => {
     this.setState({
@@ -441,10 +559,7 @@ export class ToDoList extends React.Component<{}, IToDosListState> {
       if (newCol === currColumn) {
         currColumn.isSortedDescending = !currColumn.isSortedDescending;
         currColumn.isSorted = true;
-        this.setState({
-          announcedMessage: `${currColumn.name} is sorted ${currColumn.isSortedDescending ? 'descending' : 'ascending'
-            }`,
-        });
+        
       } else {
         newCol.isSorted = false;
         newCol.isSortedDescending = true;
@@ -466,74 +581,4 @@ function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boo
 function _generateDocuments() {
 
   return addToDo(20);
-}
-
-function _randomDate(start: Date, end: Date): { value: number; dateFormatted: string } {
-  const date: Date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return {
-    value: date.valueOf(),
-    dateFormatted: date.toLocaleDateString(),
-
-  };
-}
-
-const FILE_ICONS: { name: string }[] = [
-  { name: 'accdb' },
-  { name: 'audio' },
-  { name: 'code' },
-  { name: 'csv' },
-  { name: 'docx' },
-  { name: 'dotx' },
-  { name: 'mpp' },
-  { name: 'mpt' },
-  { name: 'model' },
-  { name: 'one' },
-  { name: 'onetoc' },
-  { name: 'potx' },
-  { name: 'ppsx' },
-  { name: 'pdf' },
-  { name: 'photo' },
-  { name: 'pptx' },
-  { name: 'presentation' },
-  { name: 'potx' },
-  { name: 'pub' },
-  { name: 'rtf' },
-  { name: 'spreadsheet' },
-  { name: 'txt' },
-  { name: 'vector' },
-  { name: 'vsdx' },
-  { name: 'vssx' },
-  { name: 'vstx' },
-  { name: 'xlsx' },
-  { name: 'xltx' },
-  { name: 'xsn' },
-];
-
-function _randomFileIcon(): { docType: string; url: string } {
-  const docType: string = FILE_ICONS[Math.floor(Math.random() * FILE_ICONS.length)].name;
-  return {
-    docType,
-    url: `https://static2.sharepointonline.com/files/fabric/assets/item-types/16/${docType}.svg`,
-  };
-}
-
-function _randomFileSize(): { value: string; rawSize: number } {
-  const fileSize: number = Math.floor(Math.random() * 100) + 30;
-  return {
-    value: `${fileSize} KB`,
-    rawSize: fileSize,
-  };
-}
-
-const LOREM_IPSUM = (
-  'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut ' +
-  'labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut ' +
-  'aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore ' +
-  'eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt '
-).split(' ');
-let loremIndex = 0;
-function _lorem(wordCount: number): string {
-  const startIndex = loremIndex + wordCount > LOREM_IPSUM.length ? 0 : loremIndex;
-  loremIndex = startIndex + wordCount;
-  return LOREM_IPSUM.slice(startIndex, loremIndex).join(' ');
 }

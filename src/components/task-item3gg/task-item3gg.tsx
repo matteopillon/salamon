@@ -41,12 +41,11 @@ const imageProps: Partial<IImageProps> = {
 initializeIcons();
 
 const TaskItem3gg: FunctionComponent<TaskProp> = ({ task, children }) => {
-    const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
-    const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
+   const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
     return (
         <div key={task.key} className="taskCard" style={{ boxShadow: DefaultEffects.elevation16 }} >
             <div className={getClassfromNumber(task.type)}>
-                <div className="taskCardContent " onMouseEnter={toggleIsCalloutVisible} onMouseLeave={toggleIsCalloutVisible} onClick={openPanel}>
+                <div className="taskCardContent " onClick={openPanel}>
                     <div className="ms-Grid-row">
                         <div className="ms-Grid-col ms-sm6 ms-md6 ms-lg6">
                             <Stack horizontal gap='10px'>
