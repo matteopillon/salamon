@@ -1,8 +1,9 @@
 import React from 'react';
 import './navigation.css'
-import { Pivot, PivotItem, Label, IStyleSet, ILabelStyles, CommandBar } from '@fluentui/react'
+import { Pivot, PivotItem, Label, IStyleSet, ILabelStyles, CommandBar, PivotLinkFormat, PivotLinkSize } from '@fluentui/react'
 import TaskDay from '../tasksday/taskday'
-
+import TaskDay3gg from '../tasksday3gg/taskday3gg'
+import { ToDoList } from '../todos/todo-list';
 
 export class Task {
     name: string = '';
@@ -18,7 +19,7 @@ function addTasks(count: number): Task[] {
             key: i.toString(),
             name: 'Task ' + i,
             className: 'taskCardHeader',
-            type: getRandomIntInclusive(1,3),
+            type: getRandomIntInclusive(1, 3),
         })
     }
 
@@ -70,8 +71,19 @@ const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
 
 function Navigation() {
     return (
-        <nav>
-            <Pivot aria-label="Basic Pivot Example">
+        <div>
+            <div role="tabpanel"
+        style={{
+          float: 'left',
+          height: 60,
+          padding: 5,
+          fontSize: 30,
+          fontWeight: "bold",
+          margin: "20 0 0 0"
+        }}>Salamon</div>
+            <Pivot aria-label="Basic Pivot Example"
+                linkFormat={PivotLinkFormat.tabs}
+                linkSize={PivotLinkSize.large}>
                 <PivotItem
                     headerText="Agenda"
                     headerButtonProps={{
@@ -79,26 +91,56 @@ function Navigation() {
                         'data-title': 'Agenda',
                     }}
                 >
-                    <CommandBar items={[]}></CommandBar>
-                    <div className="ms-Grid" dir="ltr">
-                        <div className="ms-Grid-row">
-                            {days.length > 0 ? days.map((day: any) => (
-                                <div key={day.name} className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
-                                    <TaskDay day={day} />
+                    <Pivot aria-label="Basic Pivot Example">
+
+                        <PivotItem
+                            headerText="3 Giorni"
+                            headerButtonProps={{
+                                'data-order': 1,
+                                'data-title': 'Agenda 3gg',
+                            }}
+                        >
+                            <CommandBar items={[]}></CommandBar>
+                            <div className="ms-Grid" dir="ltr">
+                                <div className="ms-Grid-row">
+                                    {days.length > 0 ? days.slice(0, 3).map((day: any) => (
+                                        <div key={day.name} className="ms-Grid-col ms-sm6 ms-md2 ms-lg4">
+                                            <TaskDay3gg day={day} />
+                                        </div>
+                                    )) :
+                                        <Label>Days list is empty...</Label>}
                                 </div>
-                            )) :
-                                <Label>Days list is empty...</Label>}
-                        </div>
-                    </div>
+                            </div>
+                        </PivotItem>
+                        <PivotItem
+                            headerText="Settimana"
+                            headerButtonProps={{
+                                'data-order': 2,
+                                'data-title': 'Agenda',
+                            }}
+                        >
+                            <CommandBar items={[]}></CommandBar>
+                            <div className="ms-Grid" dir="ltr">
+                                <div className="ms-Grid-row">
+                                    {days.length > 0 ? days.map((day: any) => (
+                                        <div key={day.name} className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+                                            <TaskDay day={day} />
+                                        </div>
+                                    )) :
+                                        <Label>Days list is empty...</Label>}
+                                </div>
+                            </div>
+                        </PivotItem>
+                    </Pivot>
                 </PivotItem>
                 <PivotItem headerText="Da Fare">
-                    <Label styles={labelStyles}>Da fare</Label>
+                    <ToDoList />
                 </PivotItem>
-                <PivotItem headerText="Chiamate">
+                {/* <PivotItem headerText="Chiamate">
                     <Label styles={labelStyles}>Chiamate</Label>
-                </PivotItem>
+                </PivotItem> */}
             </Pivot>
-        </nav>
+        </div>
     );
 }
 

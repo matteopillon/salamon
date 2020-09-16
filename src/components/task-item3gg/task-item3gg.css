@@ -1,0 +1,19 @@
+.taskCardHeaderYellow {
+    background: yellow  ;
+}
+
+.taskCardHeaderBlue {
+    background: blue  ;
+}
+
+.taskCardHeaderGreen {
+    background: green  ;
+}
+
+.taskCardContent{
+    margin-left: 5px;
+    background: white;
+    padding: 5px;
+    text-align: left;
+    cursor: pointer;
+}
